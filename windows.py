@@ -441,20 +441,20 @@ class main_root(tk.Tk):
                 self.calc_buttons_second[2][-1].grid(column=3, columnspan=1, row=9, rowspan=1,
                                                      padx=10, pady=10)
 
+                self.calc_buttons_second[2].append(OperationButton("a << x",
+                    command=partial(self.__f2_x_cmd, "left", "побитово сдвинуть влево на")))
+                self.calc_buttons_second[2][-1].grid(column=0, columnspan=1, row=10, rowspan=1,
+                                                     padx=10, pady=10)
+                self.calc_buttons_second[2].append(OperationButton("a >> x",
+                    command=partial(self.__f2_x_cmd, "right", "побитово сдвинуть вправо на")))
+                self.calc_buttons_second[2][-1].grid(column=1, columnspan=1, row=10, rowspan=1,
+                                                     padx=10, pady=10)
                 self.calc_buttons_second[2].append(OperationButton("Е",
                     command=partial(self.__const_cmd, "E")))
-                self.calc_buttons_second[2][-1].grid(column=0, columnspan=1, row=10, rowspan=1,
+                self.calc_buttons_second[2][-1].grid(column=2, columnspan=1, row=10, rowspan=1,
                                                      padx=10, pady=10)
                 self.calc_buttons_second[2].append(OperationButton("ПИ",
                     command=partial(self.__const_cmd, "PI")))
-                self.calc_buttons_second[2][-1].grid(column=1, columnspan=1, row=10, rowspan=1,
-                                                     padx=10, pady=10)
-                self.calc_buttons_second[2].append(OperationButton("a << x",
-                    command=partial(self.__f2_x_cmd, "lshift", "побитово сдвинуть влево на")))
-                self.calc_buttons_second[2][-1].grid(column=2, columnspan=1, row=10, rowspan=1,
-                                                     padx=10, pady=10)
-                self.calc_buttons_second[2].append(OperationButton("a >> x",
-                    command=partial(self.__f2_x_cmd, "rshift", "побитово сдвинуть вправо на")))
                 self.calc_buttons_second[2][-1].grid(column=3, columnspan=1, row=10, rowspan=1,
                                                      padx=10, pady=10)
             else:

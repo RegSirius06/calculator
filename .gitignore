@@ -1,5 +1,7 @@
 /favicon.png
 /favicon_.png
+/ids.txt
+/history.sqlite3
 /__pycache__/
 /new_classes/__pycache__/
 /parser/__pycache__/
