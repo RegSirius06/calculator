@@ -1,2 +1,7 @@
 /favicon.png
 /favicon_.png
+/__pycache__/
+/new_classes/__pycache__/
+/parser/__pycache__/
+/parser/to_calc/__pycache__/
+/parser/to_display/__pycache__/
