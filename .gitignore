@@ -2,6 +2,8 @@
 /favicon_.png
 /ids.txt
 /history.db
+/setup.py
+/build/
 /__pycache__/
 /new_classes/__pycache__/
 /parser/__pycache__/

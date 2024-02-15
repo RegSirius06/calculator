@@ -614,14 +614,14 @@ class digit:
         try:
             return self.sinh() / self.cosh()
         except MathError:
-            return MathError("Гиперболический тангенс данного числа не существует!")
+            raise MathError("Гиперболический тангенс данного числа не существует!")
 
     @rounding
     def ctgh(self) -> Self:
         try:
             return self.cosh() / self.sinh()
         except MathError:
-            return MathError("Гиперболический котангенс данного числа не существует!")
+            raise MathError("Гиперболический котангенс данного числа не существует!")
 
     @rounding
     def asinh(self) -> Self:

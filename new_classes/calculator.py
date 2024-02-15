@@ -212,7 +212,8 @@ class History:
 
         return cls(id=id, start=start, items=items)
 
-    def delete_from_database(self, id: str):
+    @classmethod
+    def delete_from_database(cls, id: str):
         conn = sqlite3.connect('history.db')
         cursor = conn.cursor()
 
@@ -226,8 +227,8 @@ class History:
             a = f.readlines()
 
         for i in a:
-            if s in a: continue
-            s += i + '\n'
+            if f"{id}" in i: continue
+            s += i
 
         with open("ids.txt", "w") as f:
             f.write(s)

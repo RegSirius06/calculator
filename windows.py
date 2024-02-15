@@ -36,14 +36,17 @@ class view_history(tk.Toplevel):
 
         self.vsb = ttk.Scrollbar(self, orient="vertical", command=self.main_canvas.yview)
         self.main_canvas.configure(yscrollcommand=self.vsb.set)
-        self.vsb.pack(side="right", fill="y")
+        self.vsb.pack(side=tk.RIGHT, fill="y")
 
         self.hsb = ttk.Scrollbar(self, orient="horizontal", command=self.main_canvas.xview)
         self.main_canvas.configure(xscrollcommand=self.hsb.set)
-        self.hsb.pack(side="bottom", fill="x")
+        self.hsb.pack(side=tk.BOTTOM, fill="x")
 
         self.main_canvas.pack(side="left", fill="both", expand=True)
         self.main_canvas.create_window((4, 4), window=self.main_frame, anchor="nw")
+
+        self.delete_self = ttk.Button(self.main_frame, text="Удалить эту историю", command=self.__delete_self)
+        self.delete_self.pack(side=tk.TOP)
 
         sep = ttk.Separator(self.main_frame, orient=tk.HORIZONTAL)
         sep.pack(side=tk.TOP, fill=tk.X)
@@ -85,6 +88,21 @@ class view_history(tk.Toplevel):
 
         self.update()
 
+    def __delete_self(self):
+        to_fnd = f'{self.history.get_id()}'
+        self.root.history_menu.delete(self.root.history_dict[to_fnd])
+        flag = False
+        for i in self.root.history_dict:
+            if i == to_fnd:
+                flag = True
+                continue
+            self.root.history_dict[i] -= flag
+        del self.root.history_dict[to_fnd]
+        if len(self.root.history_dict) == 0:
+            self.root.history_menu.delete(3)
+        History.delete_from_database(self.history.get_id())
+        self.destroy()
+
     def __append_cmd(self, res: str):
         self.root.input_lb["text"] = f"{res}"
 
@@ -104,6 +122,7 @@ class main_root(tk.Tk):
 
         # self.attributes("-toolwindow", True) # Только крестик - в диалогах
 
+        self.history_dict = dict()
         self.main = True
         self.arg2 = None
         self.history = History(1)
@@ -124,9 +143,9 @@ class main_root(tk.Tk):
                                     command=lambda: view_history(self.history.get_id(), root=self) \
                                         if not self.history.empty() else mb.showinfo(title=f"Текущая история", message="На данный момент ещё не было произведено вычислений."))
         self.history_menu.add_separator()
-        self.history_menu.add_command(label=f'Очистить историю вычислений',
-                                      command=lambda: History.delete_all_from_database())
+        self.history_menu.add_command(label=f'Очистить историю вычислений', command=self.__clear_db)
         flag = True
+        cnt = 4
         for i in History.get_all_from_database():
             if i:
                 if flag:
@@ -134,6 +153,8 @@ class main_root(tk.Tk):
                     flag = False
                 self.history_menu.add_command(label=f'От {i.get_id()}...',
                                               command=partial(self.__summon_win, f"{i.get_id()}"))
+                self.history_dict[f"{i.get_id()}"] = cnt
+                cnt += 1
         self.menubar.add_cascade(label='История вычислений...', menu=self.history_menu)
 
         self.input_lb = ttk.Label(text="0", justify='left')
@@ -167,6 +188,10 @@ class main_root(tk.Tk):
 
     def __summon_win(self, id: str):
         x = view_history(id_history=id, root=self)
+
+    def __clear_db(self):
+        self.history_menu.delete(3, tk.END)
+        History.delete_all_from_database()
 
     def __pin_window(self):
         self.pinned = ~self.pinned
