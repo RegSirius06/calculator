@@ -293,7 +293,7 @@ class digit:
                 else:
                     raise TypeError('Значение сдвига не может быть приведено к целому типу (int).')
             else:
-                raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и объекты digit.')
+                raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и целые объекты digit.')
         else:
             raise TypeError('Сдвигаемое число не может быть приведено к целому типу (int).')
 
@@ -310,7 +310,7 @@ class digit:
             else:
                 raise TypeError('Значение сдвига не может быть приведено к целому типу (int).')
         else:
-            raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и объекты digit.')
+            raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и целые объекты digit.')
 
     def __rshift__(self, __value: int|Self) -> Self:
         """
@@ -325,7 +325,7 @@ class digit:
                 else:
                     raise TypeError('Значение сдвига не может быть приведено к целому типу (int).')
             else:
-                raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и объекты digit.')
+                raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и целые объекты digit.')
         else:
             raise TypeError('Сдвигаемое число не может быть приведено к целому типу (int).')
 
@@ -342,7 +342,7 @@ class digit:
             else:
                 raise TypeError('Значение сдвига не может быть приведено к целому типу (int).')
         else:
-            raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и объекты digit.')
+            raise TypeError('Неверный тип данных для операции битового сдвига влево. Поддерживаются только int и целые объекты digit.')
 
     def __and__(self, __value: int|Self) -> Self:
         """
@@ -357,7 +357,7 @@ class digit:
                 else:
                     raise TypeError('Объект digit не может быть приведён к целому типу (int).')
             else:
-                raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и объекты digit.')
+                raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и целые объекты digit.')
         else:
             raise TypeError('Объект digit не может быть приведён к целому типу (int).')
 
@@ -374,7 +374,7 @@ class digit:
             else:
                 raise TypeError('Объект digit не может быть приведён к целому типу (int).')
         else:
-            raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и объекты digit.')
+            raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и целые объекты digit.')
 
     def __or__(self, __value: int|Self) -> Self:
         """
@@ -389,7 +389,7 @@ class digit:
                 else:
                     raise TypeError('Объект digit не может быть приведён к целому типу (int).')
             else:
-                raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и объекты digit.')
+                raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и целые объекты digit.')
         else:
             raise TypeError('Объект digit не может быть приведён к целому типу (int).')
 
@@ -406,7 +406,7 @@ class digit:
             else:
                 raise TypeError('Объект digit не может быть приведён к целому типу (int).')
         else:
-            raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и объекты digit.')
+            raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и целые объекты digit.')
 
     def __xor__(self, __value: int|Self) -> Self:
         """
@@ -421,7 +421,7 @@ class digit:
                 else:
                     raise TypeError('Объект digit не может быть приведён к целому типу (int).')
             else:
-                raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и объекты digit.')
+                raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и целые объекты digit.')
         else:
             raise TypeError('Объект digit не может быть приведён к целому типу (int).')
 
@@ -438,7 +438,7 @@ class digit:
             else:
                 raise TypeError('Объект digit не может быть приведён к целому типу (int).')
         else:
-            raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и объекты digit.')
+            raise TypeError('Неверный тип данных для операции битового И. Поддерживаются только int и целые объекты digit.')
 
     def __invert__(self) -> Self:
         """
@@ -669,7 +669,7 @@ class digit:
                 return digit(math.factorial(int(self.__x)))
             except ValueError:
                 raise MathError("Число должно быть неотрицательным!")
-        raise TypeError('Неверный тип данных для операции факториала. Поддерживаются только int и объекты digit.')
+        raise TypeError('Неверный тип данных для операции факториала. Поддерживаются только int и целые объекты digit.')
 
     def ceil(self):
         return digit(math.ceil(self.__x))

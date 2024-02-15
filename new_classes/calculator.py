@@ -193,7 +193,8 @@ class History:
         with open("ids.txt", "a") as f:
             print(f"Saved succesfully! Your ID is {self.__id}", file=f)
 
-    def load_from_database(self, id: str):
+    @classmethod
+    def load_from_database(cls, id: str):
         conn = sqlite3.connect('history.db')
         cursor = conn.cursor()
 
@@ -209,7 +210,7 @@ class History:
 
         conn.close()
 
-        return History(id=id, start=start, items=items)
+        return cls(id=id, start=start, items=items)
 
     def delete_from_database(self, id: str):
         conn = sqlite3.connect('history.db')
@@ -231,20 +232,24 @@ class History:
         with open("ids.txt", "w") as f:
             f.write(s)
 
-    def get_all_from_database_lazy(self):
+    @classmethod
+    def get_all_from_database_lazy(cls):
         try:
             with open("ids.txt", "r") as f:
                 s = [x for x in f.readlines()][::-1]
             for i in s:
-                yield self.load_from_database(' '.join(i.split()[-2:]))
+                yield cls.load_from_database(' '.join(i.split()[-2:]))
         except FileNotFoundError:
             yield
 
-    def get_all_from_database(self):
-        return [*self.get_all_from_database_lazy()]
+    @classmethod
+    def get_all_from_database(cls):
+        return [*cls.get_all_from_database_lazy()]
 
-    def delete_all_from_database(self):
+    @classmethod
+    def delete_all_from_database(cls):
         conn = sqlite3.connect('history.db')
+        conn.isolation_level = None
         cursor = conn.cursor()
 
         cursor.execute('DELETE FROM history;')

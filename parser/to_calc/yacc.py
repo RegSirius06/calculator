@@ -278,22 +278,22 @@ class Yacc:
 
 
 
-        elif t[1] == '~':
+        elif t[1] == 'inv':
             if len(t[3]) == 1:
                 t[0] = ~digit(t[3][0])
                 return
             raise SyntaxError(f'{t[1]}() function need one arguments')
-        elif t[1] == '&':
+        elif t[1] == 'and':
             if len(t[3]) == 2:
                 t[0] = digit(t[3][0]) & digit(t[3][1])
                 return
             raise SyntaxError(f'{t[1]}() function need two arguments')
-        elif t[1] == '|':
+        elif t[1] == 'or':
             if len(t[3]) == 2:
                 t[0] = digit(t[3][0]) | digit(t[3][1])
                 return
             raise SyntaxError(f'{t[1]}() function need two arguments')
-        elif t[1] == '^':
+        elif t[1] == 'xor':
             if len(t[3]) == 2:
                 t[0] = digit(t[3][0]) ^ digit(t[3][1])
                 return

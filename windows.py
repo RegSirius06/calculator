@@ -118,16 +118,16 @@ class main_root(tk.Tk):
         self.view_menu = tk.Menu(self.menubar, tearoff=0)
         self.view_menu.add_command(label='Закрепить окно', command=self.__pin_window)
         self.menubar.add_cascade(label='Вид', menu=self.view_menu)
-
         self.history_menu = tk.Menu(self.menubar, tearoff=0)
-        self.history_menu.add_command(label=f'Очистить историю вычислений',
-                                      command=lambda: History.delete_all_from_database())
-        self.history_menu.add_separator()
+
         self.history_menu.add_command(label=f'Просмотреть текущую историю',
                                     command=lambda: view_history(self.history.get_id(), root=self) \
                                         if not self.history.empty() else mb.showinfo(title=f"Текущая история", message="На данный момент ещё не было произведено вычислений."))
+        self.history_menu.add_separator()
+        self.history_menu.add_command(label=f'Очистить историю вычислений',
+                                      command=lambda: History.delete_all_from_database())
         flag = True
-        for i in self.history.get_all_from_database():
+        for i in History.get_all_from_database():
             if i:
                 if flag:
                     self.history_menu.add_separator()
@@ -217,10 +217,10 @@ class main_root(tk.Tk):
                     self.calc_buttons_first[-1].grid(column=j, columnspan=1, row=i, rowspan=1,
                                                      padx=10, pady=10)
 
-            self.calc_buttons_first.append(OperationButton("1/x", command=self.__1dx_cmd))
+            self.calc_buttons_first.append(OperationButton("1/x", command=partial(self.__cmd_f_x, "1/")))
             self.calc_buttons_first[-1].grid(column=0, columnspan=1, row=4, rowspan=1,
                                              padx=10, pady=10)
-            self.calc_buttons_first.append(OperationButton("x ** 2", command=self.__pow2_cmd))
+            self.calc_buttons_first.append(OperationButton("x ** 2", command=partial(self.__cmd_f_x, "pow2")))
             self.calc_buttons_first[-1].grid(column=1, columnspan=1, row=4, rowspan=1,
                                              padx=10, pady=10)
             self.calc_buttons_first.append(OperationButton("sqrt(x)", command=partial(self.__cmd_f_x, "sqrt")))
@@ -411,29 +411,29 @@ class main_root(tk.Tk):
                     command=partial(self.__cmd_f_x, "abs")))
                 self.calc_buttons_second[2][-1].grid(column=0, columnspan=1, row=8, rowspan=1,
                                                      padx=10, pady=10)
-                self.calc_buttons_second[2].append(OperationButton("Поменять знак",
-                    command=partial(self.__cmd_f_x, "swapsign")))
-                self.calc_buttons_second[2][-1].grid(column=1, columnspan=1, row=8, rowspan=1,
-                                                     padx=10, pady=10)
                 self.calc_buttons_second[2].append(OperationButton("В радианы",
                     command=partial(self.__cmd_f_x, "radians")))
-                self.calc_buttons_second[2][-1].grid(column=2, columnspan=1, row=8, rowspan=1,
+                self.calc_buttons_second[2][-1].grid(column=1, columnspan=1, row=8, rowspan=1,
                                                     padx=10, pady=10)
                 self.calc_buttons_second[2].append(OperationButton("В градусы",
                     command=partial(self.__cmd_f_x, "degrees")))
+                self.calc_buttons_second[2][-1].grid(column=2, columnspan=1, row=8, rowspan=1,
+                                                     padx=10, pady=10)
+                self.calc_buttons_second[2].append(OperationButton("Инверсия",
+                    command=partial(self.__cmd_f_x, "inv")))
                 self.calc_buttons_second[2][-1].grid(column=3, columnspan=1, row=8, rowspan=1,
                                                      padx=10, pady=10)
 
-                self.calc_buttons_second[2].append(OperationButton("Инверсия",
-                    command=partial(self.__cmd_f_x, "~")))
+                self.calc_buttons_second[2].append(OperationButton("a ^ x",
+                    command=partial(self.__f2_x_cmd, "xor", "ИСКЛЮЧАЮЩЕЕ ИЛИ")))
                 self.calc_buttons_second[2][-1].grid(column=0, columnspan=1, row=9, rowspan=1,
                                                      padx=10, pady=10)
                 self.calc_buttons_second[2].append(OperationButton("a & x",
-                    command=partial(self.__f2_x_cmd, "&", "И")))
+                    command=partial(self.__f2_x_cmd, "and", "И")))
                 self.calc_buttons_second[2][-1].grid(column=1, columnspan=1, row=9, rowspan=1,
                                                      padx=10, pady=10)
                 self.calc_buttons_second[2].append(OperationButton("a | x",
-                    command=partial(self.__f2_x_cmd, "|", "ИЛИ")))
+                    command=partial(self.__f2_x_cmd, "or", "ИЛИ")))
                 self.calc_buttons_second[2][-1].grid(column=2, columnspan=1, row=9, rowspan=1,
                                                      padx=10, pady=10)
                 self.calc_buttons_second[2].append(OperationButton("a -> x",
@@ -557,6 +557,8 @@ class main_root(tk.Tk):
             if self.calc.calculate():
                 rs = self.calc.result
                 self.calc.clear()
+                self.input_lb["text"] = "0"
+                self.input.delete(0, tk.END)
                 mb.showerror(title="Ошибка вычисления", message=rs)
                 return
             self.input_lb["text"] = f"= {self.calc.result}"
@@ -655,6 +657,8 @@ class main_root(tk.Tk):
             if self.calc.calculate():
                 rs = self.calc.result
                 self.calc.clear()
+                self.input_lb["text"] = "0"
+                self.input.delete(0, tk.END)
                 mb.showerror(title="Ошибка вычисления", message=rs)
                 return
             self.input_lb["text"] = f"= {self.calc.result}"
@@ -673,38 +677,6 @@ class main_root(tk.Tk):
                 self.input.insert(0, f"-{x}")
             else:
                 self.input.insert(0, f"{x}"[1:])
-
-    def __pow2_cmd(self):
-        x = self.__read_for_cmds()
-        if x is not None:
-            self.calc.init_operation(f"pow2({x})")
-            s = repr(self.calc)
-            if self.calc.calculate():
-                rs = self.calc.result
-                self.calc.clear()
-                mb.showerror(title="Ошибка вычисления", message=rs)
-                return
-            self.input_lb["text"] = f"= {self.calc.result}"
-            self.input.delete(0, tk.END)
-            if s != "": self.history += s
-        else:
-            mb.showerror(title="Ошибка", message="Вы не закончили ввод операции.")
-
-    def __1dx_cmd(self):
-        x = self.__read_for_cmds()
-        if x is not None:
-            self.calc.init_operation(f"1/{x}")
-            s = repr(self.calc)
-            if self.calc.calculate():
-                rs = self.calc.result
-                self.calc.clear()
-                mb.showerror(title="Ошибка вычисления", message=rs)
-                return
-            self.input_lb["text"] = f"= {self.calc.result}"
-            self.input.delete(0, tk.END)
-            if s != "": self.history += s
-        else:
-            mb.showerror(title="Ошибка", message="Вы не закончили ввод операции.")
 
     def __point_cmd(self):
         s = self.input.get()
